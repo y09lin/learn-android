@@ -25,7 +25,8 @@ public class RequestUtil {
         json.put("pageIndex",pageIndex);
         json.put("pageSize",DEFAULT_SIZE);
         String url = Constants.BASE_URL+Constants.GET_ARTICLE;
-        CommonRequestUtil.sentRequest(activity, url, json.toString(), TOKEN, new CommonRequestUtil.RequestCallback() {
+        CommonRequestUtil.sentRequest(activity, url, json.toString(), TOKEN,
+                new CommonRequestUtil.RequestCallback() {
             @Override
             public void onGetResult(String result) {
                 try {
@@ -54,47 +55,5 @@ public class RequestUtil {
                 listener.onError(-1);
             }
         });
-
-        /*
-        OkHttpUtil.requestJsonPost(url, json.toString(), TOKEN, new OkHttpUtil.OkListener() {
-            @Override
-            public void onGetResult(final String result) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            JSONObject object = JSON.parseObject(result);
-                            long code = object.getLong("code");
-                            if (code == 0){
-                                JSONObject data = object.getJSONObject("data");
-                                PageDto<Article> page = new PageDto<>();
-                                page.setPageIndex(data.getInteger("pageIndex"));
-                                page.setPageSize(data.getInteger("pageSize"));
-                                page.setTotalElement(data.getInteger("totalElement"));
-                                page.setTotalPage(data.getInteger("totalPage"));
-                                page.setDataList(JSON.parseArray(data.getString("dataList"),Article.class));
-                                listener.onGetList(page);
-                            }else{
-                                listener.onError(code);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            listener.onError(-1);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onError() {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onError(-1);
-                    }
-                });
-            }
-        });
-        */
     }
 }

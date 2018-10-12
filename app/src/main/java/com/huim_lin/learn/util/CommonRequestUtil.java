@@ -9,8 +9,8 @@ public class CommonRequestUtil {
         void onError();
     }
 
-    public static void sentRequest(final Activity activity, String url, String postData, String token,
-                                   final RequestCallback callback){
+    public static void sentRequest(final Activity activity, String url, String postData,
+                                   String token, final RequestCallback callback){
         OkHttpUtil.OkListener listener = new OkHttpUtil.OkListener() {
             @Override
             public void onGetResult(final String result) {
