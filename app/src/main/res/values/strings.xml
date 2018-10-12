@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">learn</string>
+    <string name="requst_error">[%1$d]获取数据出错</string>
+</resources>
