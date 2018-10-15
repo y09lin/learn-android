@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -24,6 +25,11 @@ public class OkHttpUtil {
         void onError();
     }
 
+    public interface OkFileListener{
+        void onGetFile(InputStream is,long length);
+        void onError();
+    }
+
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60,TimeUnit.SECONDS)
@@ -34,6 +40,34 @@ public class OkHttpUtil {
         Request.Builder builder=new Request.Builder().addHeader("token",token);
         Request request=builder.url(url).build();
         getResponse(request,listener);
+    }
+
+    public static void getFile(String url, String token,OkFileListener listener){
+        Request.Builder builder=new Request.Builder().addHeader("token",token);
+        Request request=builder.url(url).build();
+        getResponse(request,listener);
+    }
+
+    private static void getResponse(final Request request, final OkFileListener listener){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        listener.onError();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) {
+                        ResponseBody body = response.body();
+                        if (body!=null){
+                            listener.onGetFile(body.byteStream(),body.contentLength());
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 
     public static void requestJsonPost(String url, String postData,

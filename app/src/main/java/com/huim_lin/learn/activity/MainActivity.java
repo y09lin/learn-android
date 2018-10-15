@@ -1,9 +1,11 @@
 package com.huim_lin.learn.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.huim_lin.learn.R;
@@ -36,11 +38,19 @@ public class MainActivity extends AppCompatActivity {
         articleAdapter = new ArticleAdapter(this,list,R.layout.item_article);
         listView.setAdapter(articleAdapter);
         initData();
+        initEvent();
         getData();
     }
 
-    private void initData() {
-        pageIndex = 0;
+    private void initEvent() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this,ArticleSetting.class);
+                intent.putExtra(ArticleSetting.EXT_ARTICLE_ID,list.get(i));
+                startActivity(intent);
+            }
+        });
         swipeLayout.setOnPullRefreshListener(new SuperSwipeRefreshLayout.OnPullRefreshListener() {
             @Override
             public void onRefresh() {
@@ -75,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initData() {
+        pageIndex = 0;
+    }
+
     private void endSwipe(){
         swipeLayout.setRefreshing(false);
         swipeLayout.setLoadMore(false);
@@ -93,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(long code) {
                 Log.d(TAG,"onError");
-                ToastUtil.showText(String.format(getString(R.string.requst_error),code));
+                ToastUtil.showText(String.format(getString(R.string.request_error),code));
                 endSwipe();
             }
         });

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">learn</string>
-    <string name="requst_error">[%1$d]获取数据出错</string>
+    <string name="request_error">[%1$d]获取数据出错</string>
+    <string name="article_detail_error">打开文章出错了</string>
 </resources>

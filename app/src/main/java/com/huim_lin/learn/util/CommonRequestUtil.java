@@ -3,6 +3,8 @@ package com.huim_lin.learn.util;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import java.io.InputStream;
+
 public class CommonRequestUtil {
     public interface RequestCallback{
         void onGetResult(String result);
@@ -37,5 +39,25 @@ public class CommonRequestUtil {
         }else{
             OkHttpUtil.requestJsonPost(url, postData, token, listener);
         }
+    }
+
+    public static void downloadFile(final Activity activity, String url, String token,
+                                    final RequestCallback callback){
+        OkHttpUtil.getFile(url, token, new OkHttpUtil.OkFileListener() {
+            @Override
+            public void onGetFile(InputStream is, long length) {
+                //
+            }
+
+            @Override
+            public void onError() {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onError();
+                    }
+                });
+            }
+        });
     }
 }

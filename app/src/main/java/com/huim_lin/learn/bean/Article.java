@@ -1,6 +1,9 @@
 package com.huim_lin.learn.bean;
 
-public class Article {
+import java.io.Serializable;
+
+public class Article implements Serializable{
+
     private Long articleId;
 
     private String type;

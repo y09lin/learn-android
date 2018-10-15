@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.huim_lin.learn.bean.Article;
+import com.huim_lin.learn.bean.ArticleDetail;
 import com.huim_lin.learn.bean.PageDto;
 
 
@@ -46,6 +47,39 @@ public class RequestUtil {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    listener.onError(-1);
+                }
+            }
+
+            @Override
+            public void onError() {
+                listener.onError(-1);
+            }
+        });
+    }
+
+    public interface GetArticleDetailListener{
+        void onGetArticle(ArticleDetail detail);
+        void onError(long code);
+    }
+
+    public static void getArticleDetail(Activity activity, long articleId,
+                                        final GetArticleDetailListener listener){
+        String url = Constants.BASE_URL + Constants.GET_ARTICLE + "/" + articleId;
+        CommonRequestUtil.sentRequest(activity, url, null, TOKEN, new CommonRequestUtil.RequestCallback() {
+            @Override
+            public void onGetResult(String result) {
+                try{
+                    JSONObject object = JSON.parseObject(result);
+                    long code = object.getLong("code");
+                    if (code == 0){
+                        JSONObject data = object.getJSONObject("data");
+                        ArticleDetail detail = JSON.parseObject(data.toString(),ArticleDetail.class);
+                        listener.onGetArticle(detail);
+                    } else {
+                        listener.onError(code);
+                    }
+                } catch (Exception e){
                     listener.onError(-1);
                 }
             }
