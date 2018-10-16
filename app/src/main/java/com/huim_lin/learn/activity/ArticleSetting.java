@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -48,6 +50,23 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
         initData();
         initEvent();
         getData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.article_setting,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        ToastUtil.showText(item.getTitle()+"");
+        return true;
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        return super.onMenuOpened(featureId, menu);
     }
 
     private void getData() {
@@ -137,13 +156,24 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
                 setDate();
                 break;
             case R.id.btn_begin:
-                text_begin.setText(""+player.getCurrentPosition());
+                int beginPoint = player.getCurrentPosition();
+                text_begin.setText(""+  beginPoint);
+                sentenceList.get(pos).setBeginPoint(beginPoint);
                 break;
             case R.id.btn_play:
-                //
+                if (isPlaying) {
+                    player.pause();
+                    btn_play.setImageResource(R.drawable.start);
+                }else{
+                    player.start();
+                    btn_play.setImageResource(R.drawable.pause);
+                }
+                isPlaying = !isPlaying;
                 break;
             case R.id.btn_end:
-                text_end.setText(""+player.getCurrentPosition());
+                int endPoint = player.getCurrentPosition();
+                text_end.setText(""+endPoint);
+                sentenceList.get(pos).setEndPoint(endPoint);
                 break;
             case R.id.btn_next:
                 if (pos==sentenceList.size()-1){
@@ -156,5 +186,13 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (player!=null){
+            player.stop();
+        }
+        super.onBackPressed();
     }
 }
