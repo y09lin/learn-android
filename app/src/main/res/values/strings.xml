@@ -2,4 +2,7 @@
     <string name="app_name">learn</string>
     <string name="request_error">[%1$d]获取数据出错</string>
     <string name="article_detail_error">打开文章出错了</string>
+    <string name="file_path_error">文件不存在</string>
+    <string name="no_pre_more">前面没有了</string>
+    <string name="no_next_more">后面没有了</string>
 </resources>

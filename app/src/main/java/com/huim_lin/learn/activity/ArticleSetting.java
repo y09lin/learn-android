@@ -1,8 +1,11 @@
 package com.huim_lin.learn.activity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -15,6 +18,7 @@ import com.huim_lin.learn.bean.Sentence;
 import com.huim_lin.learn.util.RequestUtil;
 import com.huim_lin.learn.util.ToastUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +29,9 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
     private ArticleDetail article;
     private List<Sentence> sentenceList;
     private int pos;
+    private String mp3Path;
+    private MediaPlayer player;
+    private boolean isPlaying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +65,37 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
                     }
                 }
                 setDate();
+                if (!TextUtils.isEmpty(article.getMp3())){
+                    download();
+                }
             }
 
             @Override
             public void onError(long code) {
                 ToastUtil.showText(getString(R.string.request_error,code));
+            }
+        });
+    }
+
+    private void download(){
+        RequestUtil.downloadFile(this, article.getMp3(), new RequestUtil.DownloadFileListener() {
+            @Override
+            public void onGetFile(String path) {
+                Log.d("download",path);
+                mp3Path = path;
+                player = new MediaPlayer();
+                try {
+                    player.setDataSource(mp3Path);
+                    player.prepare();
+                } catch (IOException e) {
+                    ToastUtil.showText(getString(R.string.file_path_error));
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError() {
+                Log.d("download","error");
             }
         });
     }
@@ -89,20 +122,36 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
         }
         article = new ArticleDetail(temp);
         pos = 0;
+        isPlaying = false;
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_pre:
+                if (pos==0){
+                    ToastUtil.showText(getString(R.string.no_pre_more));
+                    break;
+                }
+                pos--;
+                setDate();
                 break;
             case R.id.btn_begin:
+                text_begin.setText(""+player.getCurrentPosition());
                 break;
             case R.id.btn_play:
+                //
                 break;
             case R.id.btn_end:
+                text_end.setText(""+player.getCurrentPosition());
                 break;
             case R.id.btn_next:
+                if (pos==sentenceList.size()-1){
+                    ToastUtil.showText(getString(R.string.no_next_more));
+                    break;
+                }
+                pos++;
+                setDate();
                 break;
             default:
                 break;

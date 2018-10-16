@@ -1,6 +1,7 @@
 package com.huim_lin.learn.util;
 
 import android.app.Activity;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -8,6 +9,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.huim_lin.learn.bean.Article;
 import com.huim_lin.learn.bean.ArticleDetail;
 import com.huim_lin.learn.bean.PageDto;
+
+import java.io.File;
 
 
 public class RequestUtil {
@@ -89,5 +92,35 @@ public class RequestUtil {
                 listener.onError(-1);
             }
         });
+    }
+
+    public interface DownloadFileListener{
+        void onGetFile(String path);
+        void onError();
+    }
+
+    public static void downloadFile(Activity activity,String url, final DownloadFileListener listener){
+        String path = FileUtil.getMp3Path();
+        path+=FileUtil.getFileNameByUrl(url);
+        File file = new File(path);
+        if (file.exists()){
+            listener.onGetFile(path);
+        }else{
+            CommonRequestUtil.downloadFile(activity, url, TOKEN, new CommonRequestUtil.RequestCallback() {
+                @Override
+                public void onGetResult(String result) {
+                    if (!TextUtils.isEmpty(result)){
+                        listener.onGetFile(result);
+                    }else {
+                        listener.onError();
+                    }
+                }
+
+                @Override
+                public void onError() {
+                    listener.onError();
+                }
+            });
+        }
     }
 }

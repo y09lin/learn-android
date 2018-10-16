@@ -7,17 +7,16 @@ public class FileUtil {
 
     public static String getStoragePath(Context context){
         String cachePath;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                || !Environment.isExternalStorageRemovable()) {
-            cachePath = Environment.getDownloadCacheDirectory().getAbsolutePath();
-//            cachePath = context.getExternalCacheDir().getPath();
-        } else {
-            cachePath = context.getCacheDir().getPath();
-        }
+        cachePath = Environment.getExternalStorageDirectory().getAbsolutePath();
         return cachePath;
     }
 
     public static String getFileNameByUrl(String url){
-        return url.substring(url.lastIndexOf("/"),url.length());
+        return url.substring(1+url.lastIndexOf("/"),url.length());
+    }
+
+    public static String getMp3Path(){
+        String cachePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        return cachePath+"/learn/mp3/";
     }
 }
