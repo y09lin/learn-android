@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.huim_lin.learn.bean.Article;
 import com.huim_lin.learn.bean.ArticleDetail;
 import com.huim_lin.learn.bean.PageDto;
+import com.huim_lin.learn.bean.Sentence;
 
 import java.io.File;
+import java.util.List;
 
 
 public class RequestUtil {
@@ -122,5 +125,43 @@ public class RequestUtil {
                 }
             });
         }
+    }
+
+    public interface CommonListener {
+        void onSuccess();
+        void onError(long code);
+    }
+
+    public static void submitSentence(Activity activity, long articleId, List<Sentence> sentenceList,
+                                      final CommonListener listerner){
+        String url = Constants.BASE_URL + Constants.SET_SENTENCE;
+        JSONObject json = new JSONObject();
+        json.put("articleId",articleId);
+        JSONArray array = new JSONArray();
+        for (Sentence s: sentenceList){
+            JSONObject object = new JSONObject();
+            object.put("sentenceId",s.getSentenceId());
+            object.put("beginPoint",s.getBeginPoint());
+            object.put("endPoint",s.getEndPoint());
+            array.add(object);
+        }
+        json.put("pointList",array);
+        CommonRequestUtil.sentRequest(activity, url, json.toString(), TOKEN, new CommonRequestUtil.RequestCallback() {
+            @Override
+            public void onGetResult(String result) {
+                JSONObject object = JSON.parseObject(result);
+                long code = object.getLong("code");
+                if (code == 0){
+                    listerner.onSuccess();
+                }else{
+                    listerner.onError(code);
+                }
+            }
+
+            @Override
+            public void onError() {
+                listerner.onError(-1);
+            }
+        });
     }
 }

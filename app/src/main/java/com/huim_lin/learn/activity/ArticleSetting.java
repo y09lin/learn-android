@@ -26,8 +26,8 @@ import java.util.List;
 
 public class ArticleSetting extends AppCompatActivity implements View.OnClickListener {
     public static final String EXT_ARTICLE_ID = "ext_article_id";
-    private TextView text_sentence,text_begin,text_end;
-    private ImageButton btn_pre,btn_begin,btn_play,btn_end,btn_next;
+    private TextView text_sentence,text_begin,text_end,text_progress;
+    private ImageButton btn_pre,btn_begin,btn_play,btn_reset,btn_end,btn_next;
     private ArticleDetail article;
     private List<Sentence> sentenceList;
     private int pos;
@@ -42,9 +42,11 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
         text_sentence = findViewById(R.id.text_sentence);
         text_begin = findViewById(R.id.text_begin);
         text_end = findViewById(R.id.text_end);
+        text_progress = findViewById(R.id.text_progress);
         btn_pre = findViewById(R.id.btn_pre);
         btn_begin = findViewById(R.id.btn_begin);
         btn_play = findViewById(R.id.btn_play);
+        btn_reset = findViewById(R.id.btn_reset);
         btn_end = findViewById(R.id.btn_end);
         btn_next = findViewById(R.id.btn_next);
         initData();
@@ -60,7 +62,16 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        ToastUtil.showText(item.getTitle()+"");
+        RequestUtil.submitSentence(this, article.getArticleId(), sentenceList, new RequestUtil.CommonListener() {
+            @Override
+            public void onSuccess() {
+                //
+            }
+
+            @Override
+            public void onError(long code) {
+            }
+        });
         return true;
     }
 
@@ -120,13 +131,18 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setDate(){
-        text_sentence.setText(sentenceList.get(pos).getContent());
+        Sentence sentence = sentenceList.get(pos);
+        text_sentence.setText(sentence.getContent());
+        text_begin.setText(getString(R.string.sentence_begin,sentence.getBeginPoint()));
+        text_end.setText(getString(R.string.sentence_end,sentence.getEndPoint()));
+        text_progress.setText(getString(R.string.sentence_progress,pos+1,sentenceList.size()));
     }
 
     private void initEvent() {
         btn_pre.setOnClickListener(this);
         btn_begin.setOnClickListener(this);
         btn_play.setOnClickListener(this);
+        btn_reset.setOnClickListener(this);
         btn_end.setOnClickListener(this);
         btn_next.setOnClickListener(this);
     }
@@ -157,7 +173,7 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_begin:
                 int beginPoint = player.getCurrentPosition();
-                text_begin.setText(""+  beginPoint);
+                text_begin.setText(getString(R.string.sentence_begin,beginPoint));
                 sentenceList.get(pos).setBeginPoint(beginPoint);
                 break;
             case R.id.btn_play:
@@ -170,9 +186,15 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
                 }
                 isPlaying = !isPlaying;
                 break;
+            case R.id.btn_reset:
+                player.pause();
+                player.seekTo(0);
+                isPlaying = false;
+                btn_play.setImageResource(R.drawable.start);
+                break;
             case R.id.btn_end:
                 int endPoint = player.getCurrentPosition();
-                text_end.setText(""+endPoint);
+                text_end.setText(getString(R.string.sentence_end,endPoint));
                 sentenceList.get(pos).setEndPoint(endPoint);
                 break;
             case R.id.btn_next:

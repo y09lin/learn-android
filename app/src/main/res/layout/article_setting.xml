@@ -42,6 +42,14 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_pre"
         app:layout_constraintLeft_toRightOf="@+id/text_begin" />
 
+    <TextView
+        android:id="@+id/text_progress"
+        android:layout_marginRight="@dimen/edge_8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_pre"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ImageButton
         android:id="@+id/btn_pre"
         android:layout_width="wrap_content"
@@ -66,6 +74,15 @@
         android:src="@drawable/start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/btn_begin"
+        app:layout_constraintRight_toLeftOf="@+id/btn_reset" />
+
+    <ImageButton
+        android:id="@+id/btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/reset"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/btn_play"
         app:layout_constraintRight_toLeftOf="@+id/btn_end" />
 
     <ImageButton
@@ -74,7 +91,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/point"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/btn_play"
+        app:layout_constraintLeft_toRightOf="@+id/btn_reset"
         app:layout_constraintRight_toLeftOf="@+id/btn_next" />
 
     <ImageButton
