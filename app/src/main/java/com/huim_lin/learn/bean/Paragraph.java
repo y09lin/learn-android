@@ -32,4 +32,17 @@ public class Paragraph {
     public void setSentenceList(List<Sentence> sentenceList) {
         this.sentenceList = sentenceList;
     }
+
+    public String getContent(){
+        if (sentenceList==null || sentenceList.isEmpty()){
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<p>");
+        for (Sentence s:sentenceList){
+            sb.append(s.getContent());
+        }
+        sb.append("</p>");
+        return sb.toString();
+    }
 }

@@ -46,9 +46,18 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this,ArticleDetailAct.class);
+                intent.putExtra(ArticleSetting.EXT_ARTICLE_ID,list.get(i));
+                startActivity(intent);
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MainActivity.this,ArticleSetting.class);
                 intent.putExtra(ArticleSetting.EXT_ARTICLE_ID,list.get(i));
                 startActivity(intent);
+                return true;
             }
         });
         swipeLayout.setOnPullRefreshListener(new SuperSwipeRefreshLayout.OnPullRefreshListener() {

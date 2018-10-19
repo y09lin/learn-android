@@ -9,8 +9,10 @@
     <string name="sentence_begin">开始时间：%1$d</string>
     <string name="sentence_end">结束时间：%1$d</string>
     <string name="sentence_progress">%1$d / %2$d</string>
+    <string name="mp3_open_error">打开MP3失败了</string>
 
     <string name="submit">提交</string>
     <string name="submit_success">提交成功</string>
     <string name="submit_failed">提交失败</string>
+    <string name="refresh">刷新</string>
 </resources>

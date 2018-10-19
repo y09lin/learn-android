@@ -33,4 +33,15 @@ public class ArticleDetail extends Article {
     public void setParagraphList(List<Paragraph> paragraphList) {
         this.paragraphList = paragraphList;
     }
+
+    public String getContent(){
+        if (paragraphList == null || paragraphList.isEmpty()){
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Paragraph p:paragraphList){
+            sb.append(p.getContent());
+        }
+        return sb.toString();
+    }
 }
