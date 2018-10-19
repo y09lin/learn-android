@@ -13,12 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.huim_lin.learn.R;
 import com.huim_lin.learn.bean.ArticleDetail;
-import com.huim_lin.learn.util.FileUtil;
 import com.huim_lin.learn.util.TimeUtil;
 import com.huim_lin.learn.util.ToastUtil;
 
@@ -128,7 +126,7 @@ public class ArticleFrag extends Fragment implements View.OnClickListener {
                         handler.sendMessage(msg);
                     }
                 };
-                timer.schedule(timerTask,0,100);
+                timer.schedule(timerTask,0,500);
             }
         });
     }
