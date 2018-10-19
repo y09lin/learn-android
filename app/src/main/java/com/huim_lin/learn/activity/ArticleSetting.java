@@ -65,11 +65,12 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
         RequestUtil.submitSentence(this, article.getArticleId(), sentenceList, new RequestUtil.CommonListener() {
             @Override
             public void onSuccess() {
-                //
+                ToastUtil.showText(getString(R.string.submit_success));
             }
 
             @Override
             public void onError(long code) {
+                ToastUtil.showText(getString(R.string.submit_failed));
             }
         });
         return true;
@@ -96,7 +97,16 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
                 }
                 setDate();
                 if (!TextUtils.isEmpty(article.getMp3())){
-                    download();
+//                    download();
+                    mp3Path = article.getMp3();
+                    player = new MediaPlayer();
+                    try {
+                        player.setDataSource(mp3Path);
+                        player.prepare();
+                    } catch (IOException e) {
+                        ToastUtil.showText(getString(R.string.file_path_error));
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -196,6 +206,9 @@ public class ArticleSetting extends AppCompatActivity implements View.OnClickLis
                 int endPoint = player.getCurrentPosition();
                 text_end.setText(getString(R.string.sentence_end,endPoint));
                 sentenceList.get(pos).setEndPoint(endPoint);
+                if (pos+1<=sentenceList.size()-1){
+                    sentenceList.get(pos+1).setBeginPoint(endPoint);
+                }
                 break;
             case R.id.btn_next:
                 if (pos==sentenceList.size()-1){
