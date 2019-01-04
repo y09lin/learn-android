@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">learn</string>
+    <string name="test_text">I can\'t think how you solved the problem.</string>
 
     <string name="request_error">[%1$d]获取数据出错</string>
     <string name="article_detail_error">打开文章出错了</string>
